@@ -69,8 +69,8 @@ app.get('/callback', async (req, res) => {
 
     if (status === 200) {
       const queryParams = new URLSearchParams({
-        access_token,
-        refresh_token,
+        access_token: access_token,
+        refresh_token: refresh_token,
       }).toString();
 
       res.redirect(`http://localhost:3000/?${ queryParams }`);
@@ -82,7 +82,7 @@ app.get('/callback', async (req, res) => {
   }
 });
 
-app.get('refresh_token', async (req, res) => {
+app.get('/refresh_token', async (req, res) => {
   try {
     const { refresh_token } = req.query;
 
@@ -91,7 +91,7 @@ app.get('refresh_token', async (req, res) => {
       url: 'https://accounts.spotify.com/api/token',
       data: new URLSearchParams({
         grant_type: 'refresh_token',
-        refresh_token,
+        refresh_token: refresh_token,
       }).toString(),
       headers: {
         'content-type': 'application/x-www-form-urlencoded',
