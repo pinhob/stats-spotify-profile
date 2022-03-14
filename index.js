@@ -65,15 +65,18 @@ app.get('/callback', async (req, res) => {
       },
     }
   
-    const { data: { access_token, token_type } } = await axios(requestOptions);
+    const { status, data: { access_token, refresh_token } } = await axios(requestOptions);
 
-    const { data: userInfos } = await axios.get('https://api.spotify.com/v1/me', {
-      headers: {
-        Authorization: `${token_type} ${access_token}`
-      }
-    });
+    if (status === 200) {
+      const queryParams = new URLSearchParams({
+        access_token,
+        refresh_token,
+      }).toString();
 
-    res.send({ userInfos });
+      res.redirect(`http://localhost:3000/?${ queryParams }`);
+    } else {
+      res.redirect(`/?${ new URLSearchParams({ error: 'invalid_token' }).toString() }`);
+    }
   } catch (error) {
     res.send(error);
   }
