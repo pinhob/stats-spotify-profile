@@ -65,12 +65,13 @@ app.get('/callback', async (req, res) => {
       },
     }
   
-    const { status, data: { access_token, refresh_token } } = await axios(requestOptions);
+    const { status, data: { access_token, refresh_token, expires_in } } = await axios(requestOptions);
 
     if (status === 200) {
       const queryParams = new URLSearchParams({
         access_token: access_token,
         refresh_token: refresh_token,
+        expires_in: expires_in,
       }).toString();
 
       res.redirect(`http://localhost:3000/?${ queryParams }`);
