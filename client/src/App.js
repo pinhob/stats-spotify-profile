@@ -1,18 +1,9 @@
 import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Switch, Route, useLocation } from 'react-router-dom';
-import styled from 'styled-components/macro'
 import { GlobalStyle } from './style';
 import { accessToken, logout, getCurrentUserProfile } from './spotify';
 import { catchErrors } from './utils';
-
-const StyledLoginButton = styled.a`
-  background-color: var(--green);
-  color: var(--white);
-  padding: 10px 20px;
-  margin: 20px auto;
-  border-radius: 30px;
-  display: inline-block;
-`
+import { Login } from './pages';
 
 // Scroll to top of page when changing routes
 // https://reactrouter.com/web/guides/scroll-restoration/scroll-to-top
@@ -48,11 +39,7 @@ function App() {
       {
         !token
           ? (
-            <StyledLoginButton
-              href="http://localhost:8888/login"
-            >
-              Log in to Spotify
-            </StyledLoginButton>
+            <Login />
           )
           : (
             <Router>
