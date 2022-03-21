@@ -53,17 +53,17 @@ export const logout = () => {
  */
 const refreshToken = async () => {
   try {
-      // Logout if there's no refresh token stored or we've managed to get into a reload infinite loop
-    if (!LOCALSTORAGE_VALUES.refreshToken 
-        || LOCALSTORAGE_VALUES.refreshToken === 'undefined'
-        ||  (Date.now() - Number(LOCALSTORAGE_VALUES.timestamp) / 1000) < 1000
-      ) {
-        console.error('No refresh token avaliable');
-        logout();
-      }
+    // Logout if there's no refresh token stored or we've managed to get into a reload infinite loop
+    if (!LOCALSTORAGE_VALUES.refreshToken
+      || LOCALSTORAGE_VALUES.refreshToken === 'undefined'
+      || (Date.now() - Number(LOCALSTORAGE_VALUES.timestamp) / 1000) < 1000
+    ) {
+      console.error('No refresh token avaliable');
+      logout();
+    }
 
     // Use `/refresh_token` endpoint from our Node app
-      const { data } = await axios.get(`/refresh_token?refresh_token=${LOCALSTORAGE_VALUES.refreshToken}`);
+    const { data } = await axios.get(`/refresh_token?refresh_token=${LOCALSTORAGE_VALUES.refreshToken}`);
 
     // Update localStorage values
     window.localStorage.setItem(LOCALSTORAGE_KEYS.accessToken, data.access_token);
@@ -129,3 +129,11 @@ axios.defaults.headers['Content-Type'] = 'application/json';
  * @returns {Promise}
 */
 export const getCurrentUserProfile = () => axios.get('/me');
+
+/**
+ * Get a List of Current User's Playlists
+ * https://developer.spotify.com/documentation/web-api/reference/#endpoint-get-a-list-of-current-users-playlists
+ * @returns {Promise}
+ */
+export const getCurrentUserPlaylists = (limit = 20) => axios.get(`/me/playlists?limit=${limit}`);
+
