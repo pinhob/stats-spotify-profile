@@ -5,9 +5,9 @@ const axios = require('axios');
 const app = express();
 const PORT = 8888;
 
-const CLIENT_ID= process.env.CLIENT_ID;
-const CLIENT_SECRET= process.env.CLIENT_SECRET;
-const REDIRECT_URI= process.env.REDIRECT_URI;
+const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
+const REDIRECT_URI = process.env.REDIRECT_URI;
 
 /**
  * Generates a random string containing numbers and letters
@@ -33,7 +33,11 @@ app.get('/login', (req, res) => {
   const state = generateRandomString(16);
   res.cookie(stateKey, state);
 
-  const scope = 'user-read-private user-read-email';
+  const scope = [
+    'user-read-private',
+    'user-read-email',
+    'user-top-read',
+  ].join(' ');
 
 
   const queryParams = new URLSearchParams({
@@ -43,7 +47,7 @@ app.get('/login', (req, res) => {
     state,
     scope
   }).toString();
-  
+
   res.redirect(`https://accounts.spotify.com/authorize?${queryParams}`);
 });
 
@@ -61,10 +65,10 @@ app.get('/callback', async (req, res) => {
       }).toString(),
       headers: {
         'content-type': 'application/x-www-form-urlencoded',
-        Authorization: `Basic ${ new Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString('base64') }`,
+        Authorization: `Basic ${new Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString('base64')}`,
       },
     }
-  
+
     const { status, data: { access_token, refresh_token, expires_in } } = await axios(requestOptions);
 
     if (status === 200) {
@@ -74,9 +78,9 @@ app.get('/callback', async (req, res) => {
         expires_in: expires_in,
       }).toString();
 
-      res.redirect(`http://localhost:3000/?${ queryParams }`);
+      res.redirect(`http://localhost:3000/?${queryParams}`);
     } else {
-      res.redirect(`/?${ new URLSearchParams({ error: 'invalid_token' }).toString() }`);
+      res.redirect(`/?${new URLSearchParams({ error: 'invalid_token' }).toString()}`);
     }
   } catch (error) {
     res.send(error);
@@ -88,7 +92,7 @@ app.get('/refresh_token', async (req, res) => {
     const { refresh_token } = req.query;
 
     const requestOptions = {
-      method: 'post', 
+      method: 'post',
       url: 'https://accounts.spotify.com/api/token',
       data: new URLSearchParams({
         grant_type: 'refresh_token',
@@ -99,9 +103,9 @@ app.get('/refresh_token', async (req, res) => {
         Authorization: `Basic ${new Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString('base64')}`,
       }
     }
-  
+
     const { data } = await axios(requestOptions);
-  
+
     res.send(data);
   } catch (error) {
     res.send(error);
