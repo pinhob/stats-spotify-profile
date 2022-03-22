@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Switch, Route, useLocation } from 'react-router-dom';
 import { GlobalStyle } from './styles';
 import { accessToken, logout } from './spotify';
-import { Login, Profile, TopArtists, TopTracks, Playlists } from './pages';
+import { Login, Profile, TopArtists, TopTracks, Playlists, Playlist } from './pages';
 import styled from 'styled-components';
 
 const StyledLogoutButton = styled.button`
@@ -63,7 +63,7 @@ function App() {
                     <TopTracks />
                   </Route>
                   <Route path="/playlists/:id">
-                    <h1>Playlist</h1>
+                    <Playlist />
                   </Route>
                   <Route path="/playlists">
                     <Playlists />
