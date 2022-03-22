@@ -1,6 +1,8 @@
 # Spotify Connected App
 
-Project made following the "Build a Spotify Connected App" course made by Britanny Chiang.
+Project made following the "Build a Spotify Connected App" course made by Britanny Chiang. 
+
+https://stats-spotify-profile.herokuapp.com/
 
 ## Local Installation & Set Up
 
